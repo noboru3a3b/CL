@@ -1,0 +1,20 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ros:ensure-asdf)
+  #+quicklisp(ql:quickload '(:clack-server) :silent t)
+  )
+
+(defpackage :ros.script.api.3865056347
+  (:use :cl))
+(in-package :ros.script.api.3865056347)
+
+(defun main (&rest argv)
+  (declare (ignorable argv))
+  ;; Wait for "exit" input
+  (loop :while (not (equal (read-line) "exit"))))
+
+;;; vim: set ft=lisp lisp:
