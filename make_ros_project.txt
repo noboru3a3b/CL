@@ -1,0 +1,118 @@
+		Common Lisp のプロジェクトを作る	(2022-06-25)
+		------------------------------------
+
+Roswell をインストール
+-------------------------
+
+# 依存パッケージのインストール
+$ sudo apt update
+$ sudo apt install git build-essential automake libcurl4-openssl-dev
+# リポジトリの取得
+$ git clone https://github.com/roswell/roswell
+# ビルド
+$ cd roswell
+$ ./bootstrap && ./configure && make
+# インストール
+# /usr/local/bin/にrosコマンドがインストールされる
+$ sudo make install
+
+$ ros setup
+
+プロジェクトを作る
+--------------------
+
+cd .roswell/local-project/
+
+mkdir cl-cat
+cd cl-cat/
+touch cl-cat.asd
+touch main.lisp
+
+mkdir roswell
+cd roswell/
+ros init cat
+->    cat.ros
+
+cl-cat.asd
+---------- これは :cl-cat パッケージ用の ASDF定義 ----------
+;;; cl-cat.asd
+(in-package :cl-user)    ; どのパッケージにいるかわからないのでCL-USERパッケージにする
+(defpackage :cl-cat-asd  ; ASDFのシステム定義用のパッケージをつくる
+  (:use :cl :asdf))      ; 標準関数とASDFの関数をパッケージ修飾なしで呼べるようにする
+(in-package :cl-cat-asd) ; 作ったパッケージにする
+
+(defsystem :cl-cat
+  :class :package-inferred-system   ; システム定義のスタイルをpackage-inferred-systemにする
+  :description "cat command implemented with Common Lisp"
+  :version "0.1"
+  :author "t-sin"
+  :license "Public Domain"
+  :depends-on ("cl-cat/main"))  ; ソースファイルを相対パスで指定する
+-----------------------------------------------------------------
+
+main.lisp
+----------
+;;; main.lisp
+(in-package :cl-user)
+(defpackage :cl-cat
+  (:use cl)
+  (:export :cat))  ; 今回作成する関数(まだない)をパッケージ外部に公開
+(in-package :cl-cat)
+----------
+
+ここまでで、以下のように :cl-cat パッケージのロード動作を試せる。
+CL-USER> (ql:quickload :cl-cat)
+To load "cl-cat":
+  Load 1 ASDF system:
+    cl-cat
+; Loading "cl-cat"
+[package cl-cat/main]
+(:CL-CAT)
+
+main.lisp（機能本体を追加）
+---------- これが最終的な :cl-cat パッケージ ----------
+;;; main.lisp
+(in-package :cl-user)
+(defpackage :cl-cat
+  (:use cl)
+  (:export :cat))  ; 今回作成する関数(まだない)をパッケージ外部に公開
+(in-package :cl-cat)
+
+(defun cat (input-stream output-stream)
+  (loop
+     for line = (read-line input-stream nil :eof)
+     until (eq line :eof)
+     do (write-line line output-stream)))
+-----------------------------------------------------------
+
+cat.ros
+----------
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ros:ensure-asdf)
+  #+quicklisp (ql:quickload '(:cl-cat) :silent t)  ; cl-catをロード
+  )
+
+(defpackage :ros.script.ls.3720612639
+  (:use :cl))
+(in-package :ros.script.ls.3720612639)
+
+(defun main (&rest argv)  ; roswellスクリプトのエントリポイント
+  (declare (ignorable argv))
+  (if (>= (length argv) 1)   ; 引数があるとき
+      (with-open-file (in (first argv))  ; 一つめの引数をファイル名として入力ストリームを開き
+        ; 入力を開いたファイル、出力を標準出力ストリームにしてcatする
+        (cl-cat:cat in *standard-output*))
+      ; 引数がないので、標準入力と標準出力を指定してcatする
+      (cl-cat:cat *standard-input* *standard-output*))) ; 
+;;; vim: set ft=lisp lisp:
+----------
+
+ディレクトリ roswell/ 内で以下の様にスクリプトから Common Lisp プログラムを起動できる。
+./cat.ros <ターゲットファイル>
+
+
