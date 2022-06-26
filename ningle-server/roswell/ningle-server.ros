@@ -1,0 +1,21 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ros:ensure-asdf)
+  #+quicklisp(ql:quickload '(:ningle-server) :silent t)
+  )
+
+(defpackage :ros.script.ningle-server.3865226655
+  (:use :cl))
+(in-package :ros.script.ningle-server.3865226655)
+
+(defun main (&rest argv)
+  (declare (ignorable argv))
+
+  ;; Wait for "exit" input
+  (loop :while (not (equal (read-line) "exit"))))
+
+;;; vim: set ft=lisp lisp:
