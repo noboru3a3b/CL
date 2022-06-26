@@ -1,0 +1,67 @@
+                ASDFの使い方（Winoows10）       (2022-06-26)
+                -----------------------
+
+
+■ Projectフォルダを作って、ソースと ASDFファイルを置く
+
+~/common-lisp/
+mkdir hello-lisp
+cd hello-lisp/
+
+hello-lisp.asd
+----------
+(defsystem "hello-lisp"
+  :description "hello-lisp: a sample Lisp system."
+  :version "0.0.1"
+  :author "Joe User <joe@example.com>"
+  :licence "Public Domain"
+;  :depends-on ("optima.ppcre" "command-line-arguments")
+  :components ((:file "packages")
+               (:file "macros" :depends-on ("packages"))
+               (:file "hello" :depends-on ("macros"))))
+----------
+
+hello.lisp
+----------
+----------
+
+macros.lisp
+----------
+----------
+
+packages.lisp
+----------
+----------
+
+
+■ Projectをビルドして読み込む
+
+C:\Users\daichi>sbcl
+This is SBCL 2.2.4, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+
+* (require "asdf")
+("ASDF" "asdf" "UIOP" "uiop")
+
+* (asdf:asdf-version)
+"3.3.1"
+
+* (asdf:load-system "hello-lisp")     -> (require "hello-lisp") でも同じ。
+; compiling file "C:/Users/daichi/common-lisp/hello-lisp/packages.lisp" (written 26 JUN 2022 10:36:10 AM):
+
+; wrote C:/Users/daichi/AppData/Local/cache/common-lisp/sbcl-2.2.4-win-x64/C/Users/daichi/common-lisp/hello-lisp/packages-tmpGHU3ALSV.fasl
+; compilation finished in 0:00:00.008
+; compiling file "C:/Users/daichi/common-lisp/hello-lisp/macros.lisp" (written 26 JUN 2022 10:35:28 AM):
+
+; wrote C:/Users/daichi/AppData/Local/cache/common-lisp/sbcl-2.2.4-win-x64/C/Users/daichi/common-lisp/hello-lisp/macros-tmpAAURSO1.fasl
+; compilation finished in 0:00:00.008
+; compiling file "C:/Users/daichi/common-lisp/hello-lisp/hello.lisp" (written 26 JUN 2022 10:35:10 AM):
+
+; wrote C:/Users/daichi/AppData/Local/cache/common-lisp/sbcl-2.2.4-win-x64/C/Users/daichi/common-lisp/hello-lisp/hello-tmp5GEXGEG5.fasl
+; compilation finished in 0:00:00.008
+T
