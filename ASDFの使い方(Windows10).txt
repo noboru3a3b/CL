@@ -16,6 +16,7 @@ hello-lisp.asd
   :author "Joe User <joe@example.com>"
   :licence "Public Domain"
 ;  :depends-on ("optima.ppcre" "command-line-arguments")
+  :depends-on ("optima.ppcre") ; command-line-arguments は SBCL の uiopライブラリに含まれるので省略
   :components ((:file "packages")
                (:file "macros" :depends-on ("packages"))
                (:file "hello" :depends-on ("macros"))))
@@ -32,6 +33,15 @@ macros.lisp
 packages.lisp
 ----------
 ----------
+
+この他、hello-lisp が依存している optima.ppcreライブラリをダウンロードして同じ ~/common-lisp/ の下に置くが、
+optima.ppcre がまたいろいろなものに依存しているため、結局以下のライブラリを各 Webサイトからダウンロードして、
+~/common-lisp/ の下に置く。
+
+alexandria/ (https://gitlab.common-lisp.net/alexandria/alexandria)
+closer-mop/ (https://github.com/pcostanza/closer-mop)
+cl-ppcre/ (http://edicl.github.io/cl-ppcre/)
+optima/ (https://github.com/m2ym/optima)
 
 
 ■ Projectをビルドして読み込む
@@ -52,6 +62,17 @@ distribution for more information.
 "3.3.1"
 
 * (asdf:load-system "hello-lisp")     -> (require "hello-lisp") でも同じ。
+
+... 
+
+alexandria
+closer-mop
+optima
+cl-ppcre
+など、色々ビルドされる。
+
+ ...
+
 ; compiling file "C:/Users/daichi/common-lisp/hello-lisp/packages.lisp" (written 26 JUN 2022 10:36:10 AM):
 
 ; wrote C:/Users/daichi/AppData/Local/cache/common-lisp/sbcl-2.2.4-win-x64/C/Users/daichi/common-lisp/hello-lisp/packages-tmpGHU3ALSV.fasl
