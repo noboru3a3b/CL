@@ -1,0 +1,126 @@
+                Roswellの使い方（Winoows10）       (2022-06-30)
+                --------------------------
+
+
+■ WindowsへのRoswellのインストール
+
+Roswellのgithub/wikiを見ると、Scoopを使ってRoswellをインストールするよう
+書かれている（https://github.com/roswell/roswell/wiki/Installation#windows）。
+
+Scoopのページ（https://scoop.sh/）に従って、PowerShell terminalで以下のように
+Scoopをいにストールする。
+
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+Y
+irm get.scoop.sh | iex
+
+続いて、以下のようにroswellをインストールする。
+
+scoop install roswell
+
+以上で、Roswellの導入は完了。
+
+
+■ Roswellのセットアップ
+
+コマンドラインで、以下を実行する。
+
+ros setup
+
+これで、SBCLとQuicklispがインストールされ、Roswellが使用可能になる。
+~\.roswell\ 以下にRoswellが管理する処理系やQuicklispのプロジェクトが置かれる。
+
+・Roswell内のSBCLを起動
+C:\Users\daichi>ros run
+->　SBCLのプロンプトが出る。
+*
+
+SBCLはRoswellで管理されており、コマンドラインから直接起動できないので、注意が必要。
+
+・インストールされた処理系のバージョン
+ros run -- --version
+->
+SBCL 2.2.5
+
+・Roswellのバージョン
+ros run --version
+->
+roswell 21.10.14.111(NO-GIT-REVISION)
+
+・Roswellでインストールできるもの
+ros list versions
+->
+candidates for ros list versions [impl] are:
+
+abcl-bin
+allegro
+asdf
+ccl-bin
+clasp-bin
+clasp
+clisp-head
+clisp
+cmu-bin
+ecl
+lispworks
+mkcl
+npt
+quicklisp
+sbcl-bin
+sbcl-head
+sbcl-source
+sbcl
+slime
+sly
+
+
+■ Emacsでslimeを使う
+
+Emacsは、GNUのミラーサイト（http://gnu.mirror.constant.com/emacs/windows/emacs-27/ など）から
+Windows用のインストーラ（emacs-27.1-x86_64-installer.exe など）をダウンロードして、
+インストールしておく。
+
+Windows用の init.el ファイルは以下の位置に置かれるので、このファイルでEmacsの設定を行う。
+~\AppData\Roaming\.emacs.d\init.el
+
+~\ に .emacs ファイルを置いても意味は無いので注意が必要！
+
+・slimeをインストール
+ros install slime
+-> slimeがインストールされる。
+
+・Emacsでslimeを起動できるようにする
+~\AppData\Roaming\.emacs.d\init.el を以下のように編集する。
+-----
+(setq find-program "\"C:\\Program Files\\Git\\usr\\bin\\find.exe\""
+      grep-program "\"C:\\Program Files\\Git\\usr\\bin\\grep.exe\""
+      null-device "/dev/null")                  ; rgrep用設定
+
+;;; Slime for common lisp
+(load (expand-file-name ".roswell\\helper.el"))  ; slime 起動スクリプト
+
+(setq slime-lisp-implementations
+      `((ros ("ros" "run"))                       ; ros run の起動設定
+        (sbcl ("/opt/local/bin/sbcl"))
+        (abcl ("/opt/local/bin/abcl"))
+        (clisp ("/opt/local/bin/clisp"))))
+-----
+
+これで、Emacsから M-x slime でslimeを起動できるようになる。
+
+
+■ Quicklispライブラリのインストール
+
+・ライブラリをインストール
+ros install clack
+-> これで clack がインストールされる。
+
+これが従来の (ql:quickload :clack) 相当であり、
+直接Quicklispを使う必要がなくなった。
+
+インストールされたライブラリは、以下の位置に置かれる。
+~\.roswell\lisp\quicklisp\dists\quicklisp\
+
+また自分のローカルなプロジェクトは、以下の位置に置くことになっている。
+~\.roswell\local-projects\
+
