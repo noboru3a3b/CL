@@ -124,3 +124,35 @@ ros install clack
 また自分のローカルなプロジェクトは、以下の位置に置くことになっている。
 ~\.roswell\local-projects\
 
+
+■ Window10 にインストール出来たライブラリ
+
+以下のようなライブラリが、Windows10 に無事インストール出来た。
+
+ちなみに、~\common-lisp\ 以下に既にプロジェクトのフォルダが置かれていればそれが使われるので、
+ros install <ライブラリ名>
+で、必ずプロジェクトのダウンロードが行われるわけではない。
+
+ros install alexandria
+ros install closer-mop
+ros install cl-ppcre
+ros install optima
+ros install clack
+ros install ningle
+ros install jonathan
+ros install cl-project
+ros install local-time
+ros install trivial-shell
+ros install cl-fad
+ros install drakma
+ros install cl-test-more
+ros install clsql
+ros install rucksack
+ros install cl-markup
+ros install cl-emb
+ros install babel
+ros install ironclad
+ros install caveman2
+ros install fast-http
+ros install qlot
+
