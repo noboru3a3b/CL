@@ -7,8 +7,9 @@
 (defpackage sleepsort
   (:use :cl)
   (:import-from :bordeaux-threads
-                :make-thread
-                :join-thread))
+;                :make-thread
+;                :join-thread
+  ))
 (in-package :sleepsort)
 
 (cl-annot:enable-annot-syntax)
