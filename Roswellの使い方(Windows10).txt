@@ -2,21 +2,23 @@
                 --------------------------
 
 
-■ WindowsへのRoswellのインストール
+■ WindowsへRoswellをインストール
 
-Roswellのgithub/wikiを見ると、Scoopを使ってRoswellをインストールするよう
+Roswell の github/wiki を見ると、Scoop を使って Roswell をインストールするよう
 書かれている（https://github.com/roswell/roswell/wiki/Installation#windows）。
 
-Scoopのページ（https://scoop.sh/）に従って、PowerShell terminalで以下のように
-Scoopをいにストールする。
-
+Scoop のページ（https://scoop.sh/）に従って、PowerShell terminal で以下のように
+Scoop をいにストールする。
+-----
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 Y
 irm get.scoop.sh | iex
+-----
 
 続いて、以下のようにroswellをインストールする。
-
+-----
 scoop install roswell
+-----
 
 以上で、Roswellの導入は完了。
 
@@ -24,30 +26,38 @@ scoop install roswell
 ■ Roswellのセットアップ
 
 コマンドラインで、以下を実行する。
-
+-----
 ros setup
+-----
 
 これで、SBCLとQuicklispがインストールされ、Roswellが使用可能になる。
 ~\.roswell\ 以下にRoswellが管理する処理系やQuicklispのプロジェクトが置かれる。
 
 ・Roswell内のSBCLを起動
-C:\Users\daichi>ros run
+-----
+ros run
 ->　SBCLのプロンプトが出る。
 *
+-----
 
 SBCLはRoswellで管理されており、コマンドラインから直接起動できないので、注意が必要。
 
 ・インストールされた処理系のバージョン
+-----
 ros run -- --version
 ->
 SBCL 2.2.5
+-----
 
 ・Roswellのバージョン
+-----
 ros run --version
 ->
 roswell 21.10.14.111(NO-GIT-REVISION)
+-----
 
 ・Roswellでインストールできるもの
+-----
 ros list versions
 ->
 candidates for ros list versions [impl] are:
@@ -72,6 +82,7 @@ sbcl-source
 sbcl
 slime
 sly
+-----
 
 
 ■ Emacsでslimeを使う
@@ -86,8 +97,10 @@ Windows用の init.el ファイルは以下の位置に置かれるので、こ�
 ~\ に .emacs ファイルを置いても意味は無いので注意が必要！
 
 ・slimeをインストール
+-----
 ros install slime
 -> slimeがインストールされる。
+-----
 
 ・Emacsでslimeを起動できるようにする
 ~\AppData\Roaming\.emacs.d\init.el を以下のように編集する。
@@ -112,8 +125,10 @@ ros install slime
 ■ Quicklispライブラリのインストール
 
 ・ライブラリをインストール
+-----
 ros install clack
 -> これで clack がインストールされる。
+-----
 
 これが従来の (ql:quickload :clack) 相当であり、
 直接Quicklispを使う必要がなくなった。
@@ -128,11 +143,7 @@ ros install clack
 ■ Window10 にインストール出来たライブラリ
 
 以下のようなライブラリが、Windows10 に無事インストール出来た。
-
-ちなみに、~\common-lisp\ 以下に既にプロジェクトのフォルダが置かれていればそれが使われるので、
-ros install <ライブラリ名>
-で、必ずプロジェクトのダウンロードが行われるわけではない。
-
+-----
 ros install alexandria
 ros install closer-mop
 ros install cl-ppcre
@@ -155,4 +166,9 @@ ros install ironclad
 ros install caveman2
 ros install fast-http
 ros install qlot
+-----
+
+ちなみに、~\common-lisp\ 以下に既にプロジェクトのフォルダが置かれていればそれが使われるので、
+ros install <ライブラリ名>
+で、必ずプロジェクトのダウンロードが行われるわけではない。
 
