@@ -1,14 +1,14 @@
                 Roswellの使い方（Winoows10）       (2022-06-30)
-                --------------------------
+                ---------------------------
 
 
 ■ WindowsへRoswellをインストール
 
-Roswell の github/wiki を見ると、Scoop を使って Roswell をインストールするよう
+Roswellのgithub/wikiを見ると、Scoopを使ってRoswellをインストールするよう
 書かれている（https://github.com/roswell/roswell/wiki/Installation#windows）。
 
-Scoop のページ（https://scoop.sh/）に従って、PowerShell terminal で以下のように
-Scoop をいにストールする。
+Scoopのページ（https://scoop.sh/）に従って、PowerShell terminalで以下のように
+Scoopをインストールする。
 -----
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 Y
@@ -157,6 +157,7 @@ ros install trivial-shell
 ros install cl-fad
 ros install drakma
 ros install cl-test-more
+ros install rove
 ros install clsql
 ros install rucksack
 ros install cl-markup

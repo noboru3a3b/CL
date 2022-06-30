@@ -1,0 +1,161 @@
+                SleepSortを作る         (2022-06-30)
+                ---------------
+
+
+1. SleepSortのプロジェクトを作る
+
+cd .roswell/local-projects/
+ros run
+-> これで、SBCLが走る。
+* (ql:quickload :cl-project)
+-> これで cl-project が使えるようになる。
+To load "cl-project":
+  Load 1 ASDF system:
+    cl-project
+; Loading "cl-project"
+..
+(:CL-PROJECT)
+* (cl-project:make-project #p"sleepsort/"
+  :author "Eitarow Fukamachi"
+  :email "e.arrows@gmail.com"
+  :license "LLGPL"
+  :depends-on '(:bordeaux-threads cl-annot))
+-> これで、.roswell/local-projects/ 以下に、sleepsortプロジェクトができる。
+writing sleepsort/sleepsort.asd
+writing sleepsort/README.org
+writing sleepsort/README.markdown
+writing sleepsort/.gitignore
+writing sleepsort/src/main.lisp
+writing sleepsort/tests/main.lisp
+T
+
+
+2. 試しにプロジェクトをロードしてみる
+
+cl-projectで作ったプロジェクトの雛形は、
+そのままでもロードできる状態になっているので、
+試しにロードしてみる。
+
+* (ql:quickload :sleepsort)
+->
+To load "sleepsort":
+  Load 1 ASDF system:
+    sleepsort
+; Loading "sleepsort"
+[package sleepsort]
+(:SLEEPSORT)
+
+
+3. SleepSortを実装する
+
+以下が、SleepSortの本体。
+関数sleepsortを定義して、exportしている。
+
+src/main.lisp
+-----
+#|
+  This file is a part of sleepsort project.
+  Copyright (c) 2011 Eitarow Fukamachi (e.arrows@gmail.com)
+|#
+
+(in-package :cl-user)
+(defpackage sleepsort
+  (:use :cl)
+  (:import-from :bordeaux-threads
+                :make-thread
+                :join-thread))
+(in-package :sleepsort)
+
+(cl-annot:enable-annot-syntax)
+
+@export
+(defun sleepsort (&rest args)
+  "A function to do 'sleep sort' arguments."
+  (let* (result
+         (threads (mapcar (lambda (arg)
+                            (bordeaux-threads:make-thread
+                             (lambda ()
+                               (sleep arg)
+                               (push arg result))))
+                          args)))
+
+    (dolist (thread threads)
+      (bordeaux-threads:join-thread thread))
+
+    (nreverse result)))
+-----
+
+以下が、そのテスト。
+テストには以前のcl-test-moreではなく、その後継のroveが使われている。
+
+tests/main.lisp
+-----
+#|
+  This file is a part of sleepsort project.
+  Copyright (c) 2011 Eitarow Fukamachi (e.arrows@gmail.com)
+|#
+
+(in-package :cl-user)
+(defpackage sleepsort/tests/main
+  (:use :cl
+        :sleepsort
+        :rove))
+(in-package :sleepsort/tests/main)
+
+;; NOTE: To run this test file, execute `(asdf:test-system :sleepsort)' in your Lisp.
+
+(deftest test-target-1
+  (testing "Testing 'sleepsort'. Wait some seconds..."
+    (ok (equal (sleepsort 5 3 6 3 6 3 1 4 7) '(1 3 3 3 4 5 6 6 7)))))
+-----
+
+
+4. プロジェクトを実行してみる
+
+* (ql:quickload :sleepsort)
+-> まず、作ったばかりのライブラリをロードする必要がある。
+To load "sleepsort":
+  Load 1 ASDF system:
+    sleepsort
+; Loading "sleepsort"
+
+(:SLEEPSORT)
+
+* (use-package :sleepsort)
+-> これで、ライブラリ名の前置を省略できるようになる。
+
+* (sleepsort 5 3 6 3 6 3 1 4 7)
+-> sleepsortを実行。
+(1 3 3 3 4 5 6 6 7)
+* 
+
+
+5. testを実行
+
+* (asdf:test-system :sleepsort)
+-> こんなふうにテストを実行する。
+; compiling file "/home/okadan/.roswell/local-projects/sleepsort/src/main.lisp" (written 30 JUN 2022 10:00:57 PM):
+
+; wrote /home/okadan/.cache/common-lisp/sbcl-2.2.5-linux-x64/home/okadan/.roswell/local-projects/sleepsort/src/main-tmpP3BI68WQ.fasl
+; compilation finished in 0:00:00.004
+; compiling file "/home/okadan/.roswell/local-projects/sleepsort/tests/main.lisp" (written 30 JUN 2022 10:18:01 PM):
+
+; wrote /home/okadan/.cache/common-lisp/sbcl-2.2.5-linux-x64/home/okadan/.roswell/local-projects/sleepsort/tests/main-tmpQDARA81Z.fasl
+; compilation finished in 0:00:00.012
+
+Testing System sleepsort/tests
+
+;; testing 'sleepsort/tests/main'
+test-target-1
+  Testing 'sleepsort'. Wait some seconds...
+    ✓ Expect (EQUAL (SLEEPSORT 5 3 6 3 6 3 1 4 7) '(1 3 3 3 4 5 6 6 7)) to be true. (6999ms)
+
+✓ 1 test completed
+
+Summary:
+  All 1 test passed.
+T
+* 
+
+うまく行ったらしい。
+
