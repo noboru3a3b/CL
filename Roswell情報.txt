@@ -1,0 +1,95 @@
+                Roswell情報             (2022-07-02)
+                -----------
+
+
+RoswellのWebサイト：
+        https://github.com/roswell/roswell
+
+
+使い方：
+-----
+$ ros
+Common Lisp environment setup Utility.
+
+Usage:
+
+   ros [options] Command [arguments...]
+or
+   ros [options] [[--] script-path arguments...]
+
+commands:
+   run       Run repl
+   install   Install a given implementation or a system for roswell environment
+   update    Update installed systems.
+   build     Make executable from script.
+   use       Change default implementation.
+   init      Creates a new ros script, optionally based on a template.
+   list      List Information
+   delete    Delete installed implementations
+   config    Get and set options
+   version   Show the roswell version information
+
+Use "ros help [command]" for more information about a command.
+
+Additional help topics:
+
+   options
+
+Use "ros help [topic]" for more information about the topic.
+-----
+
+
+複数のLispのインストール：
+-----
+$ ros install               # displays a list of all installable implementations
+
+$ ros install sbcl-bin      # default sbcl
+$ ros install sbcl          # The newest released version of sbcl
+$ ros install ccl-bin       # default prebuilt binary of ccl
+$ ros install sbcl/1.2.0    # A specific version of sbcl
+
+$ ros list installed sbcl   # Listing the installed implementations
+$ ros run -- --version      # check which implementation is used
+SBCL 1.2.15
+$ ros use sbcl/1.2.3        # change the default implementation
+-----
+
+
+ライブラリのインストール：
+-----
+$ ros install qlot            # will install a program from quicklisp
+$ ros install fukamachi/qlot  # will install it from the GitHub
+-----
+
+
+Roswellによるスクリプティング：
+-----
+$ ros init
+Usage: ros init [template] name [options...]
+
+$ ros init fact
+Successfully generated: fact.ros
+
+$ emacs fact.ros
+## editing the fact.ros ...
+
+$ cat fact.ros
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 "$@"
+|#
+
+(defun fact (n)
+  (if (zerop n)
+      1
+      (* n (fact (1- n)))))
+
+(defun main (n &rest argv)
+  (declare (ignore argv))
+  (format t "~&Factorial ~D = ~D~%" n (fact (parse-integer n))))
+
+$ ./fact.ros 10
+Factorial 10 = 3628800
+-----
+

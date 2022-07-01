@@ -33,6 +33,9 @@ ros setup
 これで、SBCLとQuicklispがインストールされ、Roswellが使用可能になる。
 ~\.roswell\ 以下にRoswellが管理する処理系やQuicklispのプロジェクトが置かれる。
 
+ちなみに、SBCLは以下の位置にインストールされる。
+~\.roswell\impls\x86-64\windows\sbcl-bin\2.2.5\bin\sbcl.exe
+
 ・Roswell内のSBCLを起動
 -----
 ros run

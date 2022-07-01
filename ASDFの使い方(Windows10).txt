@@ -86,3 +86,10 @@ cl-ppcre
 ; wrote C:/Users/daichi/AppData/Local/cache/common-lisp/sbcl-2.2.4-win-x64/C/Users/daichi/common-lisp/hello-lisp/hello-tmp5GEXGEG5.fasl
 ; compilation finished in 0:00:00.008
 T
+
+既にロード済みのシステムを確認するには、以下のようにする。
+
+* (asdf:already-loaded-systems)
+("asdf" "uiop" "asdf-package-system" "hello-lisp" "optima.ppcre" "optima"
+ "alexandria" "closer-mop" "cl-ppcre")
+
