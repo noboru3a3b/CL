@@ -1,5 +1,5 @@
-                Roswellでのビルドとスクリプティング       (2022-07-02)
-                ---------------------------------
+                Roswell ビルドとスクリプティング       (2022-07-02)
+                ------------------------------
 
 
 ■ Roswellでプロジェクトを作る（多分これが一番簡単な方法）
@@ -7,7 +7,7 @@
 （ターミナル１で）
 cd .roswell\local-projects\
 ->
-C:\Users\daichi\.roswell\local-projects>ros run
+ros run
 ->
 * (ql:quickload :cl-project)
 To load "cl-project":
@@ -46,7 +46,7 @@ src/main.lisp
 -----
 
 
-C:\Users\daichi\.roswell\local-projects\hello>ros init hello
+ros init hello
 ->
 Successfully generated: hello.ros
 

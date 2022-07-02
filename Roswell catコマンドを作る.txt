@@ -1,8 +1,9 @@
-		Common Lisp のプロジェクトを作る	(2022-06-25)
-		------------------------------------
+		Roswell catコマンドを作る	(2022-06-25)
+		------------------------
+
 
 Roswell をインストール
--------------------------
+---------------------
 
 # 依存パッケージのインストール
 $ sudo apt update
@@ -18,8 +19,9 @@ $ sudo make install
 
 $ ros setup
 
+
 プロジェクトを作る
---------------------
+----------------
 
 cd .roswell/local-project/
 
@@ -51,7 +53,7 @@ cl-cat.asd
 -----------------------------------------------------------------
 
 main.lisp
-----------
+---------
 ;;; main.lisp
 (in-package :cl-user)
 (defpackage :cl-cat
@@ -69,7 +71,8 @@ To load "cl-cat":
 [package cl-cat/main]
 (:CL-CAT)
 
-main.lisp（機能本体を追加）
+
+main.lisp（機能を追加）
 ---------- これが最終的な :cl-cat パッケージ ----------
 ;;; main.lisp
 (in-package :cl-user)
@@ -84,6 +87,7 @@ main.lisp（機能本体を追加）
      until (eq line :eof)
      do (write-line line output-stream)))
 -----------------------------------------------------------
+
 
 cat.ros
 ----------
@@ -111,6 +115,7 @@ exec ros -Q -- $0 "$@"
       (cl-cat:cat *standard-input* *standard-output*))) ; 
 ;;; vim: set ft=lisp lisp:
 ----------
+
 
 ディレクトリ roswell/ 内で以下の様にスクリプトから Common Lisp プログラムを起動できる。
 ./cat.ros <ターゲットファイル>
