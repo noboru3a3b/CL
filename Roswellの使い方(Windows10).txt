@@ -113,7 +113,7 @@ ros install slime
       null-device "/dev/null")                  ; rgrep用設定
 
 ;;; Slime for common lisp
-(load (expand-file-name ".roswell\\helper.el"))  ; slime 起動スクリプト
+(load (expand-file-name "$homepath\\.roswell\\helper.el"))  ; slime 起動スクリプト
 
 (setq slime-lisp-implementations
       `((ros ("ros" "run"))                       ; ros run の起動設定

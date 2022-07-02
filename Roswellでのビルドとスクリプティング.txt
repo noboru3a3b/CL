@@ -1,0 +1,132 @@
+                Roswellでのビルドとスクリプティング       (2022-07-02)
+                ---------------------------------
+
+
+■ Roswellでプロジェクトを作る（多分これが一番簡単な方法）
+
+（ターミナル１で）
+cd .roswell\local-projects\
+->
+C:\Users\daichi\.roswell\local-projects>ros run
+->
+* (ql:quickload :cl-project)
+To load "cl-project":
+  Load 1 ASDF system:
+    cl-project
+; Loading "cl-project"
+..
+(:CL-PROJECT)
+* (cl-project:make-project #P"hello" :author "aaa")
+->
+writing hello/hello.asd
+writing hello/README.org
+writing hello/README.markdown
+writing hello/.gitignore
+writing hello/src/main.lisp
+writing hello/tests/main.lisp
+T
+*
+
+
+（ターミナル２で）
+cd .roswell\local-projects\hello\
+->
+
+src/main.lispを編集する。
+
+src/main.lisp
+-----
+(defpackage hello
+  (:use :cl)
+  (:export :wow))
+(in-package :hello)
+
+(defun wow ()
+  (print "hello!"))
+-----
+
+
+C:\Users\daichi\.roswell\local-projects\hello>ros init hello
+->
+Successfully generated: hello.ros
+
+hello.rosを編集する。
+
+hello.ros
+-----
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -S . -- $0 "$@"
+|#
+(progn ;;init forms
+  (ros:ensure-asdf)
+  #+quicklisp(ql:quickload '(:hello) :silent t)
+  )
+
+(defpackage :ros.script.hello.3846270491
+  (:use :cl))
+(in-package :ros.script.hello.3846270491)
+
+(defun main (&rest argv)
+  (declare (ignorable argv))
+  (hello:wow)
+  )
+-----
+
+
+■ Roswellでビルド
+
+ros build hello.ros
+->
+WARNING: :SB-EVAL is no longer present in *FEATURES*
+
+dir
+->
+.roswell\local-projects\hello のディレクトリ
+
+2022/07/02  10:59    <DIR>          .
+2022/07/02  10:59    <DIR>          ..
+2022/07/02  10:49                68 .gitignore
+2022/07/02  10:49               540 hello.asd
+2022/07/02  10:59        45,757,456 hello.exe         <--- これ
+2022/07/02  10:57               353 hello.ros
+2022/07/02  10:49                91 README.markdown
+2022/07/02  10:49                92 README.org
+2022/07/02  10:58    <DIR>          src
+2022/07/02  10:49    <DIR>          tests
+               6 個のファイル          45,758,600 バイト
+               4 個のディレクトリ  217,273,430,016 バイトの空き領域
+
+ものすごくサイズが大きいが、一応バイナリが出来ている。
+
+
+■ バイナリを実行
+
+hello.exe
+->
+"hello!"
+
+
+
+
+■ Roswellでスクリプティング
+
+cd CL/
+->
+
+ここでスクリプトファイル（hello.lisp）を作る。
+
+hello.lisp
+-----
+(defun main ()
+  (print "hello!"))
+-----
+
+
+以下で、このスクリプトを実行できる。
+
+ros hello.lisp
+->
+"hello!"
+
