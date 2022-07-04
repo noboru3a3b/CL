@@ -1,0 +1,53 @@
+                provideとrequireを直接使う              (2022-07-04)
+                -------------------------
+
+
+普通、Common Lispでライブラリを書こうとする場合、
+ASDFやQuicklispなどの仕組みを使う。
+その方がポータビリティに優れたものができるので普通はそうするのだが、
+Common Lispが初めから備えている生の機能である、
+provideとrequireを（直接）使ってライブラリを実現する事もできる。
+
+cd CL\
+
+mkdir lisp-package
+cd lisp-package\
+
+ここで、以下のファイル（mylib.lisp）を作る。
+
+mylib.lisp
+-----
+;; mylib.lisp
+
+(provide 'mylib)
+
+(defpackage mylib
+  (:use common-lisp)
+  (:export hello))
+
+(in-package mylib)
+
+(defvar hello "Hello, My Library!")
+-----
+
+cd ..
+
+
+上記のライブラリを呼び出すメインプログラムを作る。
+
+main.lisp
+-----
+;; 直接 (provide (require を使う例
+(require 'mylib "~/CL/lisp-package/mylib")
+(print mylib:hello)
+-----
+
+sbclの場合、require に"~/CL/lisp-package/mylib"の様にライブラリへのパスを指定する必要がある。
+
+以下のように実行する。
+
+（Windowsの場合）
+%homepath%\.roswell\impls\x86-64\windows\sbcl-bin\2.2.5\bin\sbcl.exe --script main.lisp
+->
+"Hello, My Library!"
+
