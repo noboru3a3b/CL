@@ -44,10 +44,16 @@ main.lisp
 
 sbclの場合、require に"~/CL/lisp-package/mylib"の様にライブラリへのパスを指定する必要がある。
 
-以下のように実行する。
+
+以下のように実行する（sbclはRoswellの管理下にあるので、長いpath名になっている）。
 
 （Windowsの場合）
 %homepath%\.roswell\impls\x86-64\windows\sbcl-bin\2.2.5\bin\sbcl.exe --script main.lisp
+->
+"Hello, My Library!"
+
+（Linuxの場合）
+~/.roswell/impls/x86-64/linux/sbcl-bin/2.2.5/bin/sbcl --script main.lisp 
 ->
 "Hello, My Library!"
 
